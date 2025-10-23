@@ -1,0 +1,26 @@
+services:
+  discord-bot:
+    build: 
+      context: ./discord-bot
+    container_name: discord_bot
+    depends_on:
+      - db
+    env_file:
+      - path: ./discord-bot/bot.env
+        required: true
+    volumes:
+      - ./discord-bot/src:/app/
+  db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    container_name: postgres_db
+    env_file:
+      - path: ./database/db.env
+        required: true
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d/
+
