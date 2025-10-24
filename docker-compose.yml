@@ -10,6 +10,7 @@ services:
         required: true
     volumes:
       - ./discord-bot/src:/app/
+    restart: unless-stopped
   db:
     build:
       context: ./database
@@ -24,3 +25,15 @@ services:
       - ./database/data:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d/
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    env_file: ./database/db.env
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+      - ./pgadmin/pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db
+    restart: unless-stopped
