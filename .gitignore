@@ -1,3 +1,4 @@
 *.env
 database/data/*
 database/init/*.sql
+pgadmin/pgadmin_data
