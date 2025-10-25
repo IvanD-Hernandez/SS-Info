@@ -37,6 +37,45 @@ and to stop it
 Docker compose down
 ```
 
+### DatabaseUI.py
+#### How to insert a user
+expected values: (username, student_name, affiliation, ss_ranking, personality_traits)
+- `python3 DatabaseUI.py -s 1 -v blackBolt "Levinthus Phoenix" "Phoenix" "3 Stars" "Soul Searching"`  
+
+### How to insert an event
+expected values: (event_name, event_description)
+- `python3 DatabaseUI.py -s 2 -v "Ghosts on Campus" "Has anyone noticed the strange activity in the plaza"`
+
+### How to view all users
+- `python3 DatabaseUI.py -s 3`
+
+### How to view all events
+- `python3 DatabaseUI.py -s 4`
+
+### How to select a specific user row
+pass in the table field and value within that field
+- `python3 DatabaseUI.py -s 5 -f student_name -v "Levinthus Phoenix"`
+
+### How to select a specific event row
+pass in the table field and value within that field
+- `python3 DatabaseUI.py -s 6 -f event_name -v "Ghosts on Campus"`
+
+### How to replace value in a user row
+Provide 2 fields and 2 values, the 1st field and value are the change you want, while the 2nd field and value are to identify which row to make the change to
+- `python3 DatabaseUI.py -s 7 -f username student_name -v PhoenixPrince "Levinthus Phoenix"`
+
+### How to replace value in a event row
+Provide 2 fields and 2 values, the 1st field and value are the change you want, while the 2nd field and value are to identify which row to make the change to
+- `python3 DatabaseUI.py -s 8 -f event_description event_name -v "HEEEELLLLPP GHOSTS ARE ATTACKING ME" "Ghosts on Campus"`
+
+### How to delete a user
+Provide a field identifier and value 
+- `python3 DatabaseUI.py -s 9 -f student_name -v "Levinthus Phoenix"`
+
+### How to delete an event
+Provide a field identifier and value 
+- `python3 DatabaseUI.py -s 10 -f event_name -v "Ghosts on Campus"`
+
 ## TODO-List
 
 - Client terminal to interact with the database
