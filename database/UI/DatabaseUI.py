@@ -14,9 +14,13 @@ class UserInterface(DButils):
         super().__init__()
 
         self.logger.debug(f"Logger setup successfully!")
-
         self.conn = None
         self.get_conn()
+        self.logger.info(f"UserInterface init was a success!")
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.logger.info(f"Closing connection to DB...")
+        self.conn.close()
 
     def get_conn(self):
         try:
@@ -62,6 +66,42 @@ class UserInterface(DButils):
             return -1
         except psycopg2.Error as e:
             self.logger.error(f"❌ Database error inserting {_type} : {e}")
+            exit()
+
+    def sendBulkQuary(self,_query,_valList):
+        self.logger.debug(f"query: {_query}")
+        self.logger.debug(f"list: {_valList}")
+        
+        try:
+            with self.conn as conn:
+                with conn.cursor() as cur:
+
+                    execute_values(cur, _query, _valList)
+                    
+                    self.logger.debug(f"✅ committing changes to db")
+                    conn.commit()
+                    
+        except psycopg2.errors.UniqueViolation as e:
+            self.logger.error(f"⚠️ entry already exists — skipping insert: {e}")
+            conn.rollback()
+        except psycopg2.Error as e:
+            self.logger.error(f"❌ Database error inserting entry : {e}")
+            conn.rollback()
+
+    def craftBulkQuery(self,_msgID,_jsonList):
+        _res = []
+        self.logger.info(f"executing bulk crafting for message type: {_msgID}")
+        if _msgID == "1":
+            
+            for item in _jsonList:
+                _res.append(self.getInsertValues(item))
+            # self.logger.debug(_res)
+            _query = self.templates[int(_msgID)][2].replace("(%s, %s, %s, %s, %s)","%s")
+
+            return(tuple([_query,_res]))
+
+        else:
+            self.logger.warning("Unimplemented type was passed...")
             exit()
 
 
@@ -138,8 +178,21 @@ def main(argv):
 
     _db = UserInterface()
 
-    if argv.json_import:
-        pass
+    if argv.json_template:
+        if argv.json_template =='user':
+            _db.genUserTemplate()
+        elif argv.json_template =='event':
+            _db.genEventTemplate()
+        return
+    
+    if argv.import_json:
+        _res = _db.readJson(argv.import_json[0])
+        _bulk = []
+        for _msgID in _res.keys():
+            _bulk.append(_db.craftBulkQuery(_msgID,_res[_msgID]))
+        
+        for _bulkRequest in _bulk:
+            _db.sendBulkQuary(_bulkRequest[0],_bulkRequest[1])
 
     if argv.select_template:
         
@@ -156,6 +209,7 @@ def main(argv):
         _qStr = _db.getQueryStr(int(argv.select_template))
         _res =_db.startQuery(argv,_qStr)
         _db.logger.info(f"Query ran successfully!")
+        return
 
 if __name__ == "__main__":
 
@@ -163,7 +217,11 @@ if __name__ == "__main__":
 
     # parser.add_argument('-t','--table',required=True, type=str, nargs=1, help="table to maniputate [users/events]")
     parser.add_argument('-f','--field', type=str, nargs='*',help="Some templates require an id")
-    parser.add_argument('-j','--json_import',type=str,nargs=1,help="Requires a json file to read from")
+    parser.add_argument('-p','--path',type=str,nargs=1,help="works with -i and -e")
+    parser.add_argument('-i','--import_json',type=str,nargs=1,help="path of json schema folder")
+    # parser.add_argument('-e','--export_json',type=str,nargs=1,help="name of output file")
+    parser.add_argument('-j','--json_template',choices=['user','event'],
+                        help="Generate a template to fill out")
     parser.add_argument('-s','--select_template',choices=['1','2','3','4','5','6','7','8','9','10'],
                         help="Choose a sql template to use ")
     parser.add_argument('-d','--display_template',nargs='?',const='0',choices=['0','1','2','3','4','5','6','7','8','9','10'],
