@@ -5,6 +5,7 @@ import discord
 import asyncpg
 from discord.ext import commands
 from dotenv import load_dotenv
+
 import random
 
 load_dotenv()
@@ -51,6 +52,16 @@ async def on_member_join(member):
     channel = discord.utils.get(guild.text_channels, name=welcome_channel)
     if channel:
         await channel.send(f"Welcome to the server, {member.mention}! 🎉")
+
+@bot.command(name="hlookup")
+async def houseLookup(ctx, house:str):
+    async with bot.db_pool.acquire() as conn:
+        rows = await conn.fetch("SELECT student_name, ss_ranking FROM users WHERE affiliation = $1 ORDER BY ss_ranking DESC;",house)
+        if rows:
+            msg = "\n".join([f"{r['student_name']} — {r['ss_ranking']} Stars" for r in rows])
+            await ctx.send(f"**Ranking for House {house}:**\n{msg}")
+        else:
+            await ctx.send(f"There doesnt appear to be a House/Team that goes by {house}...")
 
 @bot.command(name="hello")
 async def hello_command(ctx):
