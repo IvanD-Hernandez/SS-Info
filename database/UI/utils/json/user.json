@@ -1,0 +1,74 @@
+{
+    "1": [
+        {
+            "username": "Spirit_Guide777",
+            "student_name": "Levinthus Phoenix",
+            "affiliation": "Phoenix",
+            "ss_ranking": 3,
+            "personality_traits": "Reckless, Creative, Persistent, Resilient"
+        },
+        {
+            "username": "NephthisWorshipper347",
+            "student_name": "Stalus Phoenix",
+            "affiliation": "Phoenix",
+            "ss_ranking": 5,
+            "personality_traits": "Honest, Empathetic, Supportive, Resourceful"
+        },
+        {
+            "username": "Tinkerer",
+            "student_name": "Fabricator",
+            "affiliation": "Phoenix",
+            "ss_ranking": 4,
+            "personality_traits": "Organized, Diligent, Manipulative, Ambitious"
+        },
+        {
+            "username": "Snakes@Grass",
+            "student_name": "Debra Slytherin",
+            "affiliation": "Slytherin",
+            "ss_ranking": 7,
+            "personality_traits": "Impulsive, Competitive, Observant, Independent"
+        },
+        {
+            "username": "@Cr0w",
+            "student_name": "Alexander Crow",
+            "affiliation": "unaffiliated",
+            "ss_ranking": 4,
+            "personality_traits": "Independent, Calm, Witty, Compassionate"
+        },
+        {
+            "username": "OverStone",
+            "student_name": "???",
+            "affiliation": "unaffiliated",
+            "ss_ranking": 1,
+            "personality_traits": "???, ???, ???, ???"
+        },
+        {
+            "username": "SilentCasting557",
+            "student_name": "Jane Huffle",
+            "affiliation": "Hufflepuff",
+            "ss_ranking": 2,
+            "personality_traits": "Observant, Reserved, Introverted, Confident"
+        },
+        {
+            "username": "Scorched_Skin",
+            "student_name": "Elizabeth Gryffindor",
+            "affiliation": "Gryffindor",
+            "ss_ranking": 8,
+            "personality_traits": "Arrogant, Impulsive, Stubborn, Agressive"
+        },
+        {
+            "username": "P0k3m0nCh@mpion",
+            "student_name": "Minu Hufflepuff",
+            "affiliation": "Hufflepuff",
+            "ss_ranking": 6,
+            "personality_traits": "Honest, Arrogant, Focused, Compassionate"
+        },
+        {
+            "username": "KingzG@mbit",
+            "student_name": "Septer Ravenclaw",
+            "affiliation": "Ravenclaw",
+            "ss_ranking": 6,
+            "personality_traits": "Confident, Introverted, Manipulative, Observant"
+        }
+    ]
+}
