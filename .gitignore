@@ -2,3 +2,4 @@
 database/data/*
 database/init/*.sql
 pgadmin/pgadmin_data
+__pycache__
