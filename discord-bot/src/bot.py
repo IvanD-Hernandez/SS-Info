@@ -42,5 +42,5 @@ class SS_Info(commands.Bot):
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
-bot = SS_Info(command_prefix="!", intents=intents)
+bot = SS_Info(command_prefix="!", intents=intents, case_insensitive=True)
 bot.run(TOKEN)
