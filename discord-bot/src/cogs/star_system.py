@@ -34,6 +34,25 @@ class starSystemCog(commands.Cog):
     async def on_command_error(self, ctx, error):
         if isinstance(error, commands.MissingRole):
             await ctx.send("❌ You don’t have permission to use that command.")
+    
+    def make_help(self,_house):
+        _cmds = {
+            "top" : f"!{_house} top"
+        }
+
+        help_str = "\n".join(f"{_key} : `{_val}`\n" for _key, _val in _cmds.items())
+
+        return help_str
+    
+    def make_priv_help(self,_house):
+        _cmds = {
+            "add" : f"!{_house} add <student_name> <num>",
+            "sub" : f"!{_house} sub <student_name> <num>"
+        }
+
+        help_str = "\n".join(f"{_key} : `{_val}`" for _key, _val in _cmds.items())
+
+        return help_str
 
     def _make_group(self, cfg):
         house = cfg["name"]
@@ -41,8 +60,7 @@ class starSystemCog(commands.Cog):
         service = self.system
 
         async def _entry(ctx: commands.Context):
-            await ctx.send(f"**{house}** commands: try `!{house} top`")
-
+            await ctx.send(f"**{house}** commands:\n{self.make_help(gCmd)}\n**{house}** priv-commands:\n{self.make_priv_help(gCmd)}\n")
 
         grp = commands.Group(_entry,name=gCmd, help=f"{house} commands",invoke_without_command=True)
 
