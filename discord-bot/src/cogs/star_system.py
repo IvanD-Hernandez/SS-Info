@@ -116,7 +116,7 @@ class starSystemCog(commands.Cog):
 
 
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
     ss_service = bot.services["star_system"]
     cog = starSystemCog(bot, ss_service)
     await bot.add_cog(cog)
