@@ -38,6 +38,16 @@ Docker compose down
 ```
 
 ### DatabaseUI.py
+
+#### Testing locally
+
+Run the following in the terminal to setup your terminal enviroment.
+```
+set -o allexport
+source db.env
+set +o allexport
+```
+
 #### How to insert a user
 expected values: (username, student_name, affiliation, ss_ranking, personality_traits)
 - `python3 DatabaseUI.py -s 1 -v blackBolt "Levinthus Phoenix" "Phoenix" "3 Stars" "Soul Searching"`  
