@@ -11,6 +11,19 @@ services:
     volumes:
       - ./discord-bot/src:/app/
     restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./llm/data:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=5m
+      - OLLAMA_RUN=llama3
+
   db:
     build:
       context: ./database
@@ -24,6 +37,7 @@ services:
     volumes:
       - ./database/data:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d/
+    restart: unless-stopped
 
   pgadmin:
     image: dpage/pgadmin4
