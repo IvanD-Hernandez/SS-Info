@@ -99,6 +99,13 @@ class UserInterface(DButils):
             _query = self.templates[int(_msgID)][2].replace("(%s, %s, %s, %s, %s)","%s")
 
             return(tuple([_query,_res]))
+        if _msgID == "2":
+            for item in _jsonList:
+                _res.append(self.getInsertEventValues(item))
+            # self.logger.debug(_res)
+            _query = self.templates[int(_msgID)][2].replace("(%s, %s, %s, %s)","%s")
+
+            return(tuple([_query,_res]))    
 
         else:
             self.logger.warning("Unimplemented type was passed...")
