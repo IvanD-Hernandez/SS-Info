@@ -5,9 +5,8 @@ import discord
 import asyncpg
 from discord.ext import commands
 from dotenv import load_dotenv
-from services.ss_service import StarSystem
 from services.llm_manager import llmManager
-from services.forum_service import ForumHandler
+from services.ss_service import StarSystemService
 
 import random
 
@@ -23,26 +22,19 @@ class SS_Info(commands.Bot):
         self.db_pool = await asyncpg.create_pool(DATABASE_URL)
 
         self.services = {
-            "star_system": StarSystem(self.db_pool),
             "llm_manager": llmManager("openai",OPENAI_KEY),
-            "forum_handler": ForumHandler(self.db_pool)
+            "star_system": StarSystemService(self.db_pool)
         }
 
-        await self.load_extension("cogs.star_system")
-        print("SS has been loaded")
         await self.load_extension("cogs.llm_chat")
-        print("llm has been loaded")
-        await self.load_extension("cogs.forum_manager")
-        print("llm has been loaded")
+        await self.load_extension("cogs.star_system")
 
 
 
 
-    async def close(self):
-        await super().close()
-        await self.db_pool.close()
-
-
+async def close(self):
+    await super().close()
+    await self.db_pool.close()
 
 # @bot.command(name="hello")
 # async def hello_command(ctx):

@@ -1,28 +1,13 @@
 from discord.ext import commands
 import discord
-import traceback
-import sys
 
-class llmCog(commands.Cog):
+class llmCog(commands.Cog, name="LLM Commands"):
     def __init__(self, bot: commands.Bot, llm_service):
         self.bot = bot
         self.manager = llm_service
 
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        full_tb = ''.join(
-            traceback.format_exception(exc_type, exc_value, exc_traceback)
-        )
-
-        # Log or send it somewhere
-        print("=== Full Error Traceback ===")
-        print(full_tb)
-
-        await ctx.reply("An error occurred; details were logged.")
-
     @commands.has_role("SS-Admin")
-    @commands.command(name="ask")
+    @commands.command(name="ask", help=f"Ask the llm a question directly.")
     async def ask(self, ctx: commands.Context, *, prompt: str):
         print("Recieved Query")
         llm = self.manager.service
