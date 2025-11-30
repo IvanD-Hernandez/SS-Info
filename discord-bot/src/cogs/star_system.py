@@ -1,122 +1,170 @@
-from discord.ext import commands
 import discord
+from discord.ext import commands
+from typing import Optional
+from ui.name_filter_view import NameFilterView
+from ui.name_filter_select import NameFilterSelect
+from ui.event_filter_select import EventSelect
+import traceback
 
-SS_CONFIG = [
-     {"name": "Phoenix"},
-     {"name": "Hufflepuff"},
-     {"name": "Slytherin"},
-     {"name": "Ravenclaw"},
-     {"name": "Gryffindor"}
-]
+_button_config = {
+                "Phoenix": {
+                  "emoji_name": "house_phoenix",
+                    "fallback":"🐦‍🔥",
+                    "row": 0
+                },
 
-class starSystemCog(commands.Cog):
+                "Slytherin": {
+                    "emoji_name": "house_slytherin",
+                    "fallback":"🐍",
+                    "row": 0
+                },
 
-    def __init__(self, _bot: commands.Bot, ss_service):
-        self.bot = _bot
-        self.system = ss_service
-        self._groups = [] 
+                "Gryffindor": {
+                    "emoji_name": "house_gryffindor",
+                    "fallback":"🦁",
+                    "row": 0
+                },
 
-    async def cog_load(self):
-        for cfg in SS_CONFIG:
-            grp = self._make_group(cfg)
-            self.bot.add_command(grp)
-            self._groups.append(grp)
+                "Hufflepuff": {
+                    "emoji_name": "house_hufflepuff",
+                    "fallback":"🦫",
+                    "row": 0
+                },
+                "Ravenclaw": {
+                    "emoji_name": "house_ravenclaw",
+                    "fallback":"🐦‍⬛",
+                    "row": 0
 
-    async def cog_unload(self):
-        for g in self._groups:
-            try:
-                self.bot.remove_command(g.name)
-            except Exception:
-                pass
-        self._groups.clear()
+                },
+                "Unaffiliated": {
+                    "fallback":"❔",
+                    "row": 1
+
+                }
+            }
+
+class starSystemCog(commands.Cog, name="Star System Commands"):
+    def __init__(self, bot: commands.Bot, forum_handler):
+        self.bot = bot
+        self.handler = forum_handler
+        self.selected_users: dict[int, list[int]] = {}
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.MissingRole):
-            await ctx.send("❌ You don’t have permission to use that command.")
-    
-    def make_help(self,_house):
-        _cmds = {
-            "top" : f"!{_house} top"
-        }
+        original = getattr(error, "original", error)
 
-        help_str = "\n".join(f"{_key} : `{_val}`\n" for _key, _val in _cmds.items())
+        # Build a full traceback string from the exception object
+        tb_str = ''.join(
+            traceback.format_exception(
+                type(original),
+                original,
+                original.__traceback__
+            )
+        )
 
-        return help_str
-    
-    def make_priv_help(self,_house):
-        _cmds = {
-            "add" : f"!{_house} add <student_name> <num>",
-            "sub" : f"!{_house} sub <student_name> <num>"
-        }
+        # Log or send it somewhere
+        print("=== Full Error Traceback ===")
+        print(tb_str)
 
-        help_str = "\n".join(f"{_key} : `{_val}`" for _key, _val in _cmds.items())
+        await ctx.reply("An error occurred; details were logged.")
 
-        return help_str
+    # IMPLEMENT SELECTION SENDING
+    @commands.command(name="select_event", help=f"Select students for forum event.")
+    async def select_events(self,ctx: commands.Context):
+        if ctx.guild is None:
+            await ctx.send("Use this in a server, not DMs.")
+            return
 
-    def _make_group(self, cfg):
-        house = cfg["name"]
-        gCmd = house.lower()
-        service = self.system
+        view = EventSelect(
+            service_handler=self.handler,
+            author_id=ctx.author.id,
+            guild=ctx.guild,
+            button_config=_button_config,
+        )
+        await view._create_selects()
+        embed = await view._build_embed()
+        await ctx.send(embed=embed,view=view)
 
-        async def _entry(ctx: commands.Context):
-            await ctx.send(f"**{house}** commands:\n{self.make_help(gCmd)}\n**{house}** priv-commands:\n{self.make_priv_help(gCmd)}\n")
+    # IMPLEMENT SELECTION SENDING
+    @commands.command(name="select_student", help=f"Select students for forum event.")
+    async def select_users(self,ctx: commands.Context):
+        if ctx.guild is None:
+            await ctx.send("Use this in a server, not DMs.")
+            return
 
-        grp = commands.Group(_entry,name=gCmd, help=f"{house} commands",invoke_without_command=True)
+        view = NameFilterSelect(
+            service_handler=self.handler,
+            author_id=ctx.author.id,
+            guild=ctx.guild,
+            button_config=_button_config,
+        )
+        await view._create_selects()
+        embed = await view._build_embed()
+        await ctx.send(embed=embed,view=view)
 
-        @grp.command(name="top", help=f"Show the top rankers for house {house}.")
-        async def top(ctx):
-            rows = await service.top_rankers(house)
-            if not rows:
-                await ctx.send(f"No {house} students found.")
-                return
-            msg = "\n".join(f"{i+1}. {r['student_name']} — {r['ss_ranking']}" for i, r in enumerate(rows))
-            await ctx.send(f"🏆 **Top Ranker for house {house} **\n{msg}")
+    @commands.command(name="display", help=f"Display all students based on SS ranking.")
+    async def display_list(self,ctx: commands.Context):
+        if ctx.guild is None:
+            await ctx.send("Use this in a server, not DMs.")
+            return
 
-        @commands.has_role("SS-Admin")
-        @grp.command(name="add", help=f"Add stars to members of House {house}.")
-        async def add(ctx, _student: str = None, _num: int = None):
-            if not _student or not _num:
-                await ctx.send(f"⚠️ You must provide a name and amount! Usage: `!{gCmd} add <student_name> <quantity> `")
-                return
+        view = NameFilterView(
+            service_handler=self.handler,
+            author_id=ctx.author.id,
+            guild=ctx.guild,
+            button_config=_button_config,
+        )
+        embed = await view._build_embed()
+        await ctx.send(embed=embed,view=view)
 
-            row = await service.get_student_rank(house,_student)
-            if not row:
-                await ctx.send(f"Could not find {_student} in House {house}.")
-                return
-            _new = row['ss_ranking'] + _num
-            rows = await service.set_student_rank(house,_student,_new)
-            if not rows:
-                await ctx.send(f"Failed add {_num} stars to {_student}.")
-                return
-            await ctx.send(f"Congratulations {_student}! you've earn {_num} stars bring you up to {_new}!")
+    @commands.has_role("SS-Admin")
+    @commands.command(name="add", help=f"Add stars from a student.")
+    async def add(self,ctx, _student: str = None, _num: int = None):
+        if not _student or not _num:
+            await ctx.send(f"⚠️ You must provide a name and amount! Usage: `!add <student_name> <quantity> `")
+            return
 
-        @commands.has_role("SS-Admin")
-        @grp.command(name="sub", help=f"Subtract stars to members of House {house}.")
-        async def sub(ctx, _student: str = None, _num: int = None):
-            if not _student or not _num:
-                await ctx.send(f"⚠️ You must provide a name and amount! Usage: `!{gCmd} sub <student_name> <quantity> `")
-                return
+        row = await self.handler.get_student_rank(_student)
+        if not row:
+            await ctx.send(f"Could not find {_student}.")
+            return
+        
+        if len(row) > 1:
+            await ctx.send(f"No can do bucko, apparently there are multiple {_student} going to this school.")
+            return
+        
+        _new = row['ss_ranking'] + _num
+        rows = await self.handler.set_student_rank(_student,_new)
+        if not rows:
+            await ctx.send(f"Failed add {_num} stars to {_student}.")
+            return
+        await ctx.send(f"Congratulations {_student}! you've earn {_num} stars bring you up to {_new}!")
 
-            row = await service.get_student_rank(house,_student)
-            if not row:
-                await ctx.send(f"Could not find {_student} in House {house}.")
-                return
-            _new = row['ss_ranking'] - _num
-            rows = await service.set_student_rank(house,_student,_new)
-            if not rows:
-                await ctx.send(f"Failed add {_num} stars to {_student}.")
-                return
-            await ctx.send(f"Damn that had to hurt... {_student} lost {_num} stars, leaving them at {_new}... oof...")
+    @commands.has_role("SS-Admin")
+    @commands.command(name="sub", help=f"Subtract stars from a student.")
+    async def sub(self, ctx, _student: str = None, _num: int = None):
+        if not _student or not _num:
+            await ctx.send(f"⚠️ You must provide a name and amount! Usage: `!sub <student_name> <quantity> `")
+            return
 
-
-        return grp
-
-
-
+        row = await self.handler.get_student_rank(_student)
+        if not row:
+            await ctx.send(f"Could not find {_student}.")
+            return
+        
+        if len(row) > 1:
+            await ctx.send(f"No can do bucko, apparently there are multiple {_student} going to this school.")
+            return
+        
+        _new = row['ss_ranking'] - _num
+        rows = await self.handler.set_student_rank(_student,_new)
+        if not rows:
+            await ctx.send(f"Failed add {_num} stars to {_student}.")
+            return
+        await ctx.send(f"Damn that had to hurt... {_student} lost {_num} stars, leaving them at {_new}... oof...")
 
 
 async def setup(bot: commands.Bot):
-    ss_service = bot.services["star_system"]
-    cog = starSystemCog(bot, ss_service)
+    star_system = bot.services["star_system"]
+    cog = starSystemCog(bot,star_system)
     await bot.add_cog(cog)
