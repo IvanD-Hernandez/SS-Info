@@ -1,44 +1,124 @@
 {
-    "2": [
-        {
-            "event_name": "TEXT",
-            "event_description": "TEXT"
-        },
-        {
-            "event_name": "TEXT",
-            "event_description": "TEXT"
-        },
-        {
-            "event_name": "TEXT",
-            "event_description": "TEXT"
-        },
-        {
-            "event_name": "TEXT",
-            "event_description": "TEXT"
-        },
-        {
-            "event_name": "TEXT",
-            "event_description": "TEXT"
-        },
-        {
-            "event_name": "TEXT",
-            "event_description": "TEXT"
-        },
-        {
-            "event_name": "TEXT",
-            "event_description": "TEXT"
-        },
-        {
-            "event_name": "TEXT",
-            "event_description": "TEXT"
-        },
-        {
-            "event_name": "TEXT",
-            "event_description": "TEXT"
-        },
-        {
-            "event_name": "TEXT",
-            "event_description": "TEXT"
-        }
-    ]
+  "2": [
+    {
+      "post_title": "Ghosts on Campus",
+      "post_body": "Has anyone noticed the strange activity in the plaza",
+      "author_id": "19",
+      "participants": "27,4,9,13,26"
+    },
+    {
+      "post_title": "Late Night Library Sounds",
+      "post_body": "I swear I heard whispering near the archives around midnight.",
+      "author_id": "3",
+      "participants": "5,12,18"
+    },
+    {
+      "post_title": "Stray Cat or Familiar?",
+      "post_body": "There's a black cat that keeps showing up in the courtyard. Anyone know who it belongs to?",
+      "author_id": "7",
+      "participants": "2,9,15,22"
+    },
+    {
+      "post_title": "Potions Lab Smell Again",
+      "post_body": "Did someone spill something? The entire hallway reeks.",
+      "author_id": "14",
+      "participants": "3,8,11,17,20"
+    },
+    {
+      "post_title": "Weird Lights in the Forest",
+      "post_body": "Saw glowing blue orbs near the tree line last night. Should we report this?",
+      "author_id": "21",
+      "participants": "6,13"
+    },
+    {
+      "post_title": "Best Study Spots?",
+      "post_body": "Trying to find a quieter area to prep for exams. Any recommendations?",
+      "author_id": "8",
+      "participants": "1,4,7,12,19,23"
+    },
+    {
+      "post_title": "Missing Broomsticks",
+      "post_body": "Three brooms disappeared from the storage shed. Prank or theft?",
+      "author_id": "10",
+      "participants": "5,9,14,20,25,28"
+    },
+    {
+      "post_title": "Cafeteria Menu Change",
+      "post_body": "Why did they remove pumpkin stew? I’m devastated.",
+      "author_id": "2",
+      "participants": "3,6,7,11"
+    },
+    {
+      "post_title": "Dueling Club Drama",
+      "post_body": "Someone broke the dummy again. Who keeps overcharging their spells?",
+      "author_id": "26",
+      "participants": "8,10,12,14,16,18,20"
+    },
+    {
+      "post_title": "Strange Footprints",
+      "post_body": "Snow revealed large tracks leading to the greenhouse. Not human.",
+      "author_id": "11",
+      "participants": "4,5,22,27"
+    },
+    {
+      "post_title": "Lost Wand",
+      "post_body": "Dropped my wand near the practice grounds. It's pine with a silver band. Please return!",
+      "author_id": "1",
+      "participants": "2,3"
+    },
+    {
+      "post_title": "Is the Tower Haunted?",
+      "post_body": "Saw a figure at the top window last night but no one is assigned to that dorm.",
+      "author_id": "30",
+      "participants": "10,13,15,19,24"
+    },
+    {
+      "post_title": "Campus Festival Planning",
+      "post_body": "We need volunteers for decorations and booth setup!",
+      "author_id": "6",
+      "participants": "1,8,9,14,17,23,26,29"
+    },
+    {
+      "post_title": "Potion Explosion",
+      "post_body": "Okay… who mixed the wrong ingredients in cauldron #7??",
+      "author_id": "5",
+      "participants": "12,18,20"
+    },
+    {
+      "post_title": "Secret Tunnel Rumors",
+      "post_body": "Someone said there’s a hidden passage behind the west staircase. Anyone verify?",
+      "author_id": "17",
+      "participants": "6,7,15,21,25"
+    },
+    {
+      "post_title": "Book Missing from Archives",
+      "post_body": "A restricted section book is gone. This is serious.",
+      "author_id": "13",
+      "participants": "9,11,16,22"
+    },
+    {
+      "post_title": "New Magical Creature?",
+      "post_body": "Heard strange chirping from the lake. Doesn’t match anything I know.",
+      "author_id": "4",
+      "participants": "3,6,20,27,30"
+    },
+    {
+      "post_title": "Dorm Temperature Issues",
+      "post_body": "Why is my room freezing when the rest of the building is warm?",
+      "author_id": "23",
+      "participants": "1,5,9,14"
+    },
+    {
+      "post_title": "Study Group Forming",
+      "post_body": "Anyone want to join a weekly spell theory study group?",
+      "author_id": "12",
+      "participants": "2,7,10,13,15,18"
+    },
+    {
+      "post_title": "Campus Owl Acting Weird",
+      "post_body": "The messenger owl keeps dropping letters randomly. Is it sick?",
+      "author_id": "28",
+      "participants": "4,16,19,23,29"
+    }
+  ]
 }
